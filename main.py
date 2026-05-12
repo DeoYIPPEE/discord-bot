@@ -38,8 +38,6 @@ async def on_ready():
     except Exception as e:
         print(f"An exception occurred while starting a task: {e}")
     
-    print(server_up_cache)
-
 
 
 @tasks.loop(seconds = 10)
@@ -61,7 +59,6 @@ async def statusChangeMessage():
             embed = embed_cycle[1]
         with open("up.txt", "w") as f:
             f.write(str(server_up))
-        print(server_up)
         await channel.send(embed=embed)
     
 
