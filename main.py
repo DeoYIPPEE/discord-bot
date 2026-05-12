@@ -13,7 +13,14 @@ TOKEN = str(os.getenv("DISCORD_TOKEN"))
 
 intents = discord.Intents.all()
 bot = commands.Bot(command_prefix="!", intents=intents)
+
+hashmap = {"True": True, "False": False}
+
 server_up_cache = None
+
+with open("up.txt", "r") as f:
+    server_up_cache = hashmap[f.readline()]
+
 embed_cycle = [discord.Embed(title="SERVER IS NOW ONLINE", color=discord.Color.green()), discord.Embed(title="SERVER IS OFFLINE", color=discord.Color.red())]
 
 @bot.event
@@ -50,6 +57,8 @@ async def statusChangeMessage():
             embed = embed_cycle[0]
         else:
             embed = embed_cycle[1]
+        with open("up.txt", "w") as f:
+            f.write(str(server_up))
         print(server_up)
         await channel.send(embed=embed)
     
