@@ -37,6 +37,8 @@ async def on_ready():
         statusChangeMessage.start()
     except Exception as e:
         print(f"An exception occurred while starting a task: {e}")
+    
+    print(server_up_cache)
 
 
 
