@@ -16,11 +16,6 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 
 hashmap = {"True": True, "False": False}
 
-server_up_cache = None
-
-with open("up.txt", "r") as f:
-    server_up_cache = hashmap[f.readline()]
-
 embed_cycle = [discord.Embed(title="SERVER IS NOW ONLINE", color=discord.Color.green()), discord.Embed(title="SERVER IS OFFLINE", color=discord.Color.red())]
 
 @bot.event
@@ -38,6 +33,10 @@ async def on_ready():
     except Exception as e:
         print(f"An exception occurred while starting a task: {e}")
     
+    global server_up_cache
+    with open("up.txt", "r") as f:
+        server_up_cache = hashmap[f.readline()]
+        print(f"On load: server_up_cache = {server_up_cache}")
 
 
 @tasks.loop(seconds = 10)
@@ -46,19 +45,19 @@ async def statusChangeMessage():
         server = mcs.lookup("vocation-publicity.gl.joinmc.link:25565")
         status = server.status()
         server_up = True
-    except Exception:
-        server_up = False
+    except Exception as e:
+        if not "timed out" in f"{e}":
+            server_up = False
     global server_up_cache
     global embed_cycle
     if server_up_cache != server_up:
         server_up_cache = server_up
         channel = bot.get_channel(1502203891813716079)
-        if server_up:
-            embed = embed_cycle[0]
-        else:
-            embed = embed_cycle[1]
+        embed = embed_cycle[0] if server_up else embed_cycle[1]
         with open("up.txt", "w") as f:
             f.write(str(server_up))
+            print(f"Wrote {str(server_up)} to up.txt")
+            print(f"server_up_cache = {server_up_cache}")
         await channel.send(embed=embed)
     
 
@@ -68,8 +67,11 @@ async def status(ctx: discord.Interaction):
     try:
         server = mcs.lookup("vocation-publicity.gl.joinmc.link:25565")
         status = server.status()
-
-        await ctx.response.send_message(f"The server is online with {status.players.online} players currently online")
+        try:
+            online_players = [i.name for i in status.players.sample]
+            await ctx.response.send_message(f"The server is online with {status.players.online} players currently online. \nThe following players are currently online: `{''.join(online_players)}`")
+        except TypeError:
+            await ctx.response.send_message(f"The server is online but no one's online (T-T)")
     except Exception:
         await ctx.response.send_message(f"The server is offline.")
         user = await bot.fetch_user(1173455513288196127)
