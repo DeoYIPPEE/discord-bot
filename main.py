@@ -39,11 +39,11 @@ async def on_ready():
         print(f"On load: server_up_cache = {server_up_cache}")
 
 
-@tasks.loop(seconds = 10)
+@tasks.loop(seconds = 30)
 async def statusChangeMessage():
     try:
         server = mcs.lookup("vocation-publicity.gl.joinmc.link:25565")
-        status = server.status()
+        status = server.status(tries=5)
         server_up = True
     except Exception as e:
         if not "timed out" in f"{e}":
