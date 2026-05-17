@@ -38,6 +38,9 @@ async def on_ready():
         server_up_cache = hashmap[f.readline()]
         print(f"On load: server_up_cache = {server_up_cache}")
 
+    channel = bot.get_channel(1502203891813716079)
+    embed = discord.Embed(title="Bot is now online!", color=discord.Color.dark_green())
+    channel.send_message(embed)
 
 @tasks.loop(seconds = 30)
 async def statusChangeMessage():
