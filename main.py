@@ -40,7 +40,7 @@ async def on_ready():
 
     channel = bot.get_channel(1502203891813716079)
     embed = discord.Embed(title="Bot is now online!", color=discord.Color.dark_green())
-    await channel.send(embed)
+    await channel.send(embed=embed)
 
 @tasks.loop(seconds = 30)
 async def statusChangeMessage():
