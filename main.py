@@ -68,7 +68,7 @@ async def statusChangeMessage():
 @app_commands.allowed_contexts(dms=True, private_channels=True, guilds=True)
 async def status(ctx: discord.Interaction):
     try:
-        server = mcs.lookup("vocation-publicity.gl.joinmc.link:25565")
+        server = mcs.lookup("networks-unbraided.gl.joinmc.link:25565")
         status = server.status()
         try:
             online_players = [i.name for i in status.players.sample]
