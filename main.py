@@ -13,6 +13,7 @@ TOKEN = str(os.getenv("DISCORD_TOKEN"))
 
 intents = discord.Intents.all()
 bot = commands.Bot(command_prefix="!", intents=intents)
+SERVER = "networks-unbraided.gl.joinmc.link:25565"
 
 hashmap = {"True": True, "False": False}
 
@@ -45,7 +46,7 @@ async def on_ready():
 @tasks.loop(seconds = 30)
 async def statusChangeMessage():
     try:
-        server = mcs.lookup("vocation-publicity.gl.joinmc.link:25565")
+        server = mcs.lookup(SERVER)
         status = server.status(tries=5)
         server_up = True
     except Exception as e:
@@ -68,7 +69,7 @@ async def statusChangeMessage():
 @app_commands.allowed_contexts(dms=True, private_channels=True, guilds=True)
 async def status(ctx: discord.Interaction):
     try:
-        server = mcs.lookup("networks-unbraided.gl.joinmc.link:25565")
+        server = mcs.lookup(SERVER)
         status = server.status()
         try:
             online_players = [i.name for i in status.players.sample]
