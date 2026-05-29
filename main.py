@@ -56,11 +56,7 @@ async def statusChangeMessage():
     if server_up_cache != server_up:
         server_up_cache = server_up
         channel = bot.get_channel(1502203891813716079)
-<<<<<<< HEAD
-        embed = embed_cycle[0] if server_up else embed_cycle[1]
-=======
         embed = embed_cycle.next()
->>>>>>> db24ab71c2317f5deaf8e5a42515f0ddcaa1a559
         with open("up.txt", "w") as f:
             f.write(str(server_up))
             print(f"Wrote {str(server_up)} to up.txt")
