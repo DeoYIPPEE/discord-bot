@@ -13,7 +13,7 @@ TOKEN = str(os.getenv("DISCORD_TOKEN"))
 
 intents = discord.Intents.all()
 bot = commands.Bot(command_prefix="!", intents=intents)
-SERVER = "networks-unbraided.gl.joinmc.link:25565"
+SERVER = "fall-workers.gl.joinmc.link:25565"
 
 hashmap = {"True": True, "False": False}
 
@@ -57,8 +57,7 @@ async def statusChangeMessage():
     if server_up_cache != server_up:
         server_up_cache = server_up
         channel = bot.get_channel(1502203891813716079)
-        iterator = iter(embed_cycle)
-        embed = next(iterator)
+        embed = embed_cycle[0] if server_up else embed_cycle[1]
         with open("up.txt", "w") as f:
             f.write(str(server_up))
             print(f"Wrote {str(server_up)} to up.txt")
