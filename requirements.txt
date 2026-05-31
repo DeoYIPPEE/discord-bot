@@ -1,3 +1,4 @@
 pycord
 python-dotenv
 mcstatus
+json
