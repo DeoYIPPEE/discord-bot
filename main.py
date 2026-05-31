@@ -22,6 +22,7 @@ with open("data/servers.json", "r") as f:
     servers = json.load(f)
 Names = Enum("Name", servers)
 
+CHANNEL = 1502203891813716079
 @bot.event
 async def on_ready():
     print("Bot starting!")
@@ -42,7 +43,7 @@ async def on_ready():
         server_up_cache = [True if i.replace("\n", "")=='True' else False for i in f.readlines()]
         print(f"On load: server_up_cache = {server_up_cache}")
 
-    channel = bot.get_channel(1486973587494797362)
+    channel = bot.get_channel(CHANNEL)
     embed = discord.Embed(title="Bot is now online!", color=discord.Color.dark_green())
     await channel.send(embed=embed)
 
@@ -69,7 +70,7 @@ async def statusChangeMessage():
                 embed = discord.Embed(title = f"SERVER {name} IS NOW ONLINE", description= f"The version is {status.version.name}. Hop on!", color=discord.Color.green())
             else:
                 embed = discord.Embed(title = f"SERVER {name} IS NOW OFFLINE", color=discord.Color.red())
-            channel = bot.get_channel(1486973587494797362)
+            channel = bot.get_channel(CHANNEL)
             await channel.send(embed=embed)
         count += 1
     with open("up.txt", "w") as f:
