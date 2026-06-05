@@ -7,8 +7,10 @@ from discord.ext import tasks
 # from discord.commands import option
 import json
 from enum import Enum
-#import logging
 from mcstatus import JavaServer as mcs
+from functions.server_syncer import server_syncer
+#import logging
+
 
 dotenv.load_dotenv()
 TOKEN = str(os.getenv("DISCORD_TOKEN"))
@@ -46,6 +48,8 @@ async def on_ready():
     channel = bot.get_channel(CHANNEL)
     embed = discord.Embed(title="Bot is now online!", color=discord.Color.dark_green())
     await channel.send(embed=embed)
+
+    server_syncer()
 
 @tasks.loop(seconds = 30)
 async def statusChangeMessage():
