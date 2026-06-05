@@ -98,7 +98,8 @@ async def status(ctx: discord.Interaction,
         status = server.status()
         try:
             online_players = [i.name for i in status.players.sample]
-            await ctx.response.send_message(f"The server {name.name} is online with {status.players.online} players currently online. \nThe following players are currently online: `{''.join(online_players)}`\nThe server version is `{status.version.name}`")
+            forge_check = f"{status.forge_data}"
+            await ctx.response.send_message(f"The server {name.name} is online with {status.players.online} players currently online. \nThe following players are currently online: `{''.join(online_players)}`\nThe server version is `{"Forge" if forge_check != "None" else ""}{status.version.name}`")
         except TypeError:
             await ctx.response.send_message(f"The server {name.name} is online but no one's online (T-T)")
     except Exception as e:
