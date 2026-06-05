@@ -71,7 +71,8 @@ async def statusChangeMessage():
             server_up_cache[count] = up_list_changed[count]
 
             if server_up_cache[count]:
-                embed = discord.Embed(title = f"SERVER {name} IS NOW ONLINE", description= f"The version is {status.version.name}. Hop on!", color=discord.Color.green())
+                forge_check = str(status.forge_data)
+                embed = discord.Embed(title = f"SERVER {name} IS NOW ONLINE", description= f"The version is {'Forge' if forge_check != 'None' else ''}{status.version.name}. Hop on!", color=discord.Color.green())
             else:
                 embed = discord.Embed(title = f"SERVER {name} IS NOW OFFLINE", color=discord.Color.red())
             channel = bot.get_channel(CHANNEL)
@@ -99,7 +100,7 @@ async def status(ctx: discord.Interaction,
         try:
             online_players = [i.name for i in status.players.sample]
             forge_check = f"{status.forge_data}"
-            await ctx.response.send_message(f"The server {name.name} is online with {status.players.online} players currently online. \nThe following players are currently online: `{''.join(online_players)}`\nThe server version is `{"Forge" if forge_check != "None" else ""}{status.version.name}`")
+            await ctx.response.send_message(f"The server {name.name} is online with {status.players.online} players currently online. \nThe following players are currently online: `{''.join(online_players)}`\nThe server version is `{'Forge' if forge_check != 'None' else ''}{status.version.name}`")
         except TypeError:
             await ctx.response.send_message(f"The server {name.name} is online but no one's online (T-T)")
     except Exception as e:
