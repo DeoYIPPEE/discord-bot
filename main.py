@@ -4,21 +4,17 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 from discord.ext import tasks
-# from discord.commands import option
 import json
 from enum import Enum
 from mcstatus import JavaServer as mcs
 from functions.server_syncer import server_syncer
-#import logging
 
 
 dotenv.load_dotenv()
 TOKEN = str(os.getenv("DISCORD_TOKEN"))
-#handler = logging.FileHandler(filename="discord.log", mode="a", encoding="utf-8")
 
 intents = discord.Intents.all()
 bot = commands.Bot(command_prefix="!", intents=intents)
-SERVER = "fall-workers.gl.joinmc.link:25565"
 
 with open("data/servers.json", "r") as f:
     servers = json.load(f)
@@ -41,8 +37,8 @@ async def on_ready():
         print(f"An exception occurred while starting a task: {e}")
     
     global server_up_cache
-    with open("up.txt", "r") as f:
-        server_up_cache = [True if i.replace("\n", "")=='True' else False for i in f.readlines()]
+    with open("data/up.json", "r") as f:
+        server_up_cache = json.load(f)
         print(f"On load: server_up_cache = {server_up_cache}")
 
     channel = bot.get_channel(CHANNEL)
@@ -65,6 +61,7 @@ async def statusChangeMessage():
             status = server.status()
             up_list_changed[count] = True
         except Exception as e:
+            # "timed out" is only raised as an exception when the server is currently loading up. So, if this isn't found then the server must be offline
             if not "timed out" in str(e):
                 up_list_changed[count] = False
         if up_list_changed[count] != server_up_cache[count]:
@@ -78,10 +75,8 @@ async def statusChangeMessage():
             channel = bot.get_channel(CHANNEL)
             await channel.send(embed=embed)
         count += 1
-    with open("up.txt", "w") as f:
-        temp = [f"{i}\n" for i in server_up_cache]
-        temp[-1] = temp[-1].replace("\n", "")
-        f.writelines(temp)
+    with open("data/up.json", "w") as f:
+        json.dump(server_up_cache, f)
         
 
 @bot.tree.command(name="status", description="Gets status of SMP") #, integration_types={bot.IntegrationType.user_install},contexts={bot.InteractionContextType.private_channel, discord.InteractionContextType.guild}
